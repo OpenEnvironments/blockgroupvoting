@@ -1,0 +1,52 @@
+Possession,Abbreviation,StateFIPS,CountyField
+Alabama,AL,1,COUNTYFP20
+Alaska,AK,2,none
+Arizona,AZ,4,CDE_COUNTY
+Arkansas,AR,5,COUNTY_FIP
+California,CA,6,CNTY_CODE
+Colorado,CO,8,COUNTYFP
+Connecticut,CT,9,COUNTYFP20
+Delaware,DE,10,none
+District of Columbia,DC,11,none
+Florida,FL,12,county
+Georgia,GA,13,CTYNUMBER
+Hawaii,HI,15,COUNTYFP
+Idaho,ID,16,COUNTYFP
+Illinois,IL,17,COUNTYFP20
+Indiana,IN,18,COUNTYFP20
+Iowa,IA,19,COUNTY
+Kansas,KS,20,COUNTYFP
+Kentucky,KY,21,missing
+Louisiana,LA,22,COUNTYFP
+Maine,ME,23,COUNTY20
+Maryland,MD,24,JURSCODE
+Massachusetts,MA,25,none
+Michigan,MI,26,COUNTYFIPS
+Minnesota,MN,27,COUNTYFIPS
+Mississippi,MS,28,COUNTYFP20
+Missouri,MO,29,COUNTYFP
+Montana,MT,30,COUNTYFP10
+Nebraska,NE,31,COUNTY
+Nevada,NV,32,COUNTYFP
+New Hampshire,NH,33,COUNTYFP20
+New Jersey,NJ,34,COUNTY
+New Mexico,NM,35,COUNTYFP
+New York,NY,36,COUNTYFP
+North Carolina,NC,37,COUNTY_ID
+North Dakota,ND,38,COUNTYFP
+Ohio,OH,39,COUNTYFP20
+Oklahoma,OK,40,COUNTYFP
+Oregon,OR,41,COUNTY
+Pennsylvania,PA,42,COUNTYFP
+Rhode Island,RI,44,COUNTYFP20
+South Carolina,SC,45,COUNTY
+South Dakota,SD,46,missing
+Tennessee,TN,47,COUNTY
+Texas,TX,48,CNTY
+Utah,UT,49,CountyID
+Vermont,VT,50,COUNTYFP20
+Virginia,VA,51,COUNTYFP
+Washington,WA,53,COUNTY
+West Virginia,WV,54,missing
+Wisconsin,WI,55,CNTY_FIPS
+Wyoming,WY,56,COUNTYFP20
