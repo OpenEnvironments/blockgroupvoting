@@ -4,15 +4,19 @@
 
 These functions download and unzip the state based files needed for blockgroupvoting allocations.
 
-https://www2.census.gov/geo/tiger/TIGER2021/BG/    get the file lists
-
 """
 import wget
 from zipfile import ZipFile
+import geopandas as gpd
 
 def get_blockgroups():
     """
-    Downloads the state based files that have shapes for Census block groups
+    Downloads the state based files that have shapes for Census block groups.
+    These publications are part of the Census TIGER/Line files
+
+    These shape files also have ALAND (land area) and AWATER (water area)
+    variables that can be used to calculate urban density.
+
     :return: null
     """
     statefips = ['01','02','04','05','06','08','09','10','11','12','13', \
@@ -30,13 +34,41 @@ def get_blockgroups():
         with ZipFile(datapath + fn, 'r') as Z:
            Z.extractall(datapath + fn[:-4])
 
+    return()
+
 def get_electionresults():
     """
-    Download the 2020 dataset from here, unzip its main file then unzip state files
+    Download the 2020 dataset from the electionscience team on Harvard's dataverse,
+    unzip its main file then unzip state files
     https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/K7760H
     """
+    return()
 
 def get_ACS5YR():
     """
+    For demonstration purposes,
+        download a recent version of the American Community Survey
+        at the block group level
+        join it's demographic variables to the blockgroupvoting dataset
+
     D:\Open Environments\data\census\tiger\ACS_2019_5YR_BG\ACS_2019_5YR_BG.gdb    
-    """"""
+    """
+
+    acs = gpd.read_file("D:/Open Environments/data/census/tiger/ACS_2019_5YR_BG/ACS_2019_5YR_BG.gdb")
+    # This file has ~200 variables but they're all B09000 series.  Maybe I'm using the gdb laout wrong
+
+
+    return()
+
+def demo_analytics():
+    """
+
+    :return:
+    """
+
+    # Propensity for republican voting in each block group
+    ca["red"] = ca["REP"] / (ca["REP"] + ca["DEM"] + ca["LIB"] + ca["OTH"])
+
+    # Proportion of block group area not covered by precints
+    ca.gap.sum() / ca.area.sum()
+

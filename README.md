@@ -1,6 +1,8 @@
 # blockgroupvoting
 This repository shares the programming needed to project U.S. election results from state based voting precincts onto U.S. Census block group geographies. 
 
+The resulting dataset is published on Harvard's dataverse as .
+
 ## Problem and Opportunity
 In the United States, voting is largely a private matter. A registered voter is given a randomized ballot form or machine to prevent linkage between their voting choices and their identity. This disconnect supports confidence in the election process, but it provides obstacles to an election's analysis. A common solution is to field exit polls, interviewing voters immediately after leaving their polling location. This method is rife with bias, however, and functionally limited in direct demographics data collected. 
 
@@ -21,20 +23,20 @@ The lowest level of this geography changes often and can obsolesce before the ne
 ## Dataset Structure
 The dataset's columns include:
 
-     | Column | Definition
----- | ------ | --------------------------------------
-    | GEOID | 12 digit primary key. Census GEOID of the block group row. This code concatenates 
-    | |    2 digit state
-    | |    3 digit county within state
-    | |    6 digit Census Tract identifier
-    | |    1 digit Census Block Group identifier within tract
-    |REP|Votes for Republican party candidate for president
-    |DEM|Votes for Democratic party candidate for president
-    |LIB|Votes for Libertarian party candidate for president
-    |OTH|Votes for presidential candidates other than Republican, Democratic or Libertarian
-    |area|square kilometers of area associated with this block group 
-    |gap|total area of the block group, net of area attributed to voting precincts
-
+|    |Column|Definition                                          |
+|----|:------|:----------------------------------------------------|
+|    |GEOID | 12 digit primary key. Census GEOID of the block group row. This code concatenates:| 
+|    | |    2 digit state|
+|    | |    3 digit county within state|
+|    | |    6 digit Census Tract identifier|
+|    | |    1 digit Census Block Group identifier within tract|
+|    |REP|Votes for Republican party candidate for president|
+|    |DEM|Votes for Democratic party candidate for president|
+|    |LIB|Votes for Libertarian party candidate for president|
+|    |OTH|Votes for presidential candidates other than Republican, Democratic or Libertarian|
+|    |area|square kilometers of area associated with this block group |
+|    |gap|total area of the block group, net of area attributed to voting precincts|
+|    |precincts|Number of voting precincts that intersect this block group|
 
 ## Assumptions, Notes and Concerns:
 * Votes are attributed based upon the proportion of the precinct's area that intersects the corresponding block group. Alternative methods are left to the analyst's initiative. 
@@ -43,9 +45,12 @@ The dataset's columns include:
 * Counties are commonly coded using FIPS codes. However, each election result file may have the county field named differently. Also, three states do not share county definitions - Delaware, Massachusetts, Alaska and the District of Columbia.
 * Block groups may be used to capture geographies that do not have population like bodies of water. As a result, block groups without intersection voting precincts are not uncommon.
 * In the U.S., elections are administered at a state level with the Federal Elections Commission compiling state totals against the Electoral College weights.  The states have liberty, though, to define and change their own voting precincts https://en.wikipedia.org/wiki/Electoral_precinct.
+* The Census Bureau practices "data suppression", filtering some block groups from demographic publication because they do not meet a population threshold. This practice is done to maintain statistical reliability in the estimates and to prevent accidental disclosure of individual respondents. As a result, 
+    * the shape files for state block groups may have additional block groups not available in demographic estimates.
+    * ignoring the suppressed block groups will cause statistical bias for these smallest geographies  
 * As written, this projection takes more than 6 days to complete on a familiar Intel-64 based laptop. Its performance would benefit from:
-** Running states in parallel rather than serially
-** Looking for intersecting precincts within the shared county rather than state level
+    * Running states in parallel rather than serially
+    * Looking for intersecting precincts within the shared county rather than state level
 
 ## RECOGNITION
 Special thanks to the meticulous efforts of 
@@ -64,6 +69,8 @@ doi = {10.7910/DVN/K7760H},
 url = {https://doi.org/10.7910/DVN/K7760H}
 }
 
+## License
+This code is available subject to the [MIT Open Source License](https://choosealicense.com/licenses/mit/)
 
 ##Summary Statistics
 
