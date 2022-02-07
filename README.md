@@ -1,7 +1,7 @@
 # blockgroupvoting
 This repository shares the programming needed to project U.S. election results from state based voting precincts onto U.S. Census block group geographies. 
 
-The resulting dataset is published on Harvard's dataverse as blockgroupvoting.
+The resulting dataset is published on Harvard's dataverse host as the blockgroupvoting dataset in the Open Environments dataverse.
 
 ## Problem and Opportunity
 In the United States, voting is largely a private matter. A registered voter is given a randomized ballot form or machine to prevent linkage between their voting choices and their identity. This disconnect supports confidence in the election process, but it provides obstacles to an election's analysis. A common solution is to field exit polls, interviewing voters immediately after leaving their polling location. This method is rife with bias, however, and functionally limited in direct demographics data collected. 
@@ -32,6 +32,7 @@ The dataset's columns include:
 |    | |    3 digit county within state|
 |    | |    6 digit Census Tract identifier|
 |    | |    1 digit Census Block Group identifier within tract|
+|    |STATE|State abbreviation, redundent with 2 digit state FIPS code above|
 |    |REP|Votes for Republican party candidate for president|
 |    |DEM|Votes for Democratic party candidate for president|
 |    |LIB|Votes for Libertarian party candidate for president|
