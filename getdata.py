@@ -57,12 +57,10 @@ def get_ACS5YR():
     acs = gpd.read_file("D:/Open Environments/data/census/tiger/ACS_2019_5YR_BG/ACS_2019_5YR_BG.gdb")
     # This file has ~200 variables but they're all B09000 series.  Maybe I'm using the gdb laout wrong
 
-
     return()
 
 def demo_analytics():
     """
-
     :return:
     """
 

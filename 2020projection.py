@@ -41,7 +41,6 @@ import pandas as pd
 import geopandas as gpd
 import geoplot as gpt
 
-
 import logging
 logging.basicConfig(level=logging.INFO)
 logging.debug('Initializing debug logging')
@@ -208,4 +207,111 @@ def loadbcg:
             # This alerts when more than an acre of the block group is unrepresented by a voting precinct
             print(b.GEOID, blockgroups[blockgroups.index == i].area.sum(), bgresults['gap'])
         # area of intersections should equal area of block group
-        bglist.append(bgresults)    
+        bglist.append(bgresults)
+
+
+
+def mainloop():
+    ####################################################################
+    #
+    # REVISION TO REMOVE COUNTY BASED PROCESSING
+    #
+    ####################################################################
+
+    # First pass on states that have county fields identified
+    for state in states[~states['CountyField'].isin(['none', 'missing'])].iterrows():
+        print("Processing state", state[1]["Abbreviation"])
+        # read in the corresponding shape files for voting results and block groups
+        precincts = gpd.read_file( \
+            datapath + "/electionscience/dataverse_files/" \
+            + state[1]["Abbreviation"].lower() + "_2020/" + state[1]["Abbreviation"].lower() + "_2020.shp")
+        precincts = precincts.to_crs("EPSG:3395")
+        # The precinct set may not have a key.  Intersection calcs will then lose track of which pr caused the intersection.
+        precincts["prindex"] = precincts.index
+        blockgroups = gpd.read_file( \
+            datapath + "census/tiger/blockgroups/tl_2021_" + "{:02d}".format(state[1]["StateFIPS"]) + "_bg")
+        blockgroups = blockgroups.to_crs("EPSG:3395")
+        # Calculate the party summary
+        R = [c for c in precincts.columns.to_list() if c[0:7] == "G20PRER"][0]
+        precincts["REP"] = precincts[R]
+        D = [c for c in precincts.columns.to_list() if c[0:7] == "G20PRED"][0]
+        precincts["DEM"] = precincts[D]
+        L = [c for c in precincts.columns.to_list() if c[0:7] == "G20PREL"][0]
+        precincts["LIB"] = precincts[L]
+        O = [c for c in precincts.columns.to_list() if c[0:6] == "G20PRE" and c[6] not in ['R', 'D', 'L']]
+        precincts["OTH"] = precincts[O].sum(axis=1)
+        # Initialize summary objects for block groups and precincts
+        bgaccumulate = list()
+        prlist = {}  # a list of dict to track precinct results remaining to be allocated
+        # initialized with one entry per precinct value set to 100 pct remaining
+        # in many cases, precincts do not have identifiers so we will use the pr dataframe's indexes
+        for pre in list(precincts.index.values):
+            prlist[pre] = 100
+
+        bgwith = 0
+        bgwithout = 0
+
+        for i, b in blockgroups.iterrows():
+            print(state[1]["Abbreviation"], "processing", i, "of", blockgroups.shape[0], "block groups")
+            bgresults = dict.fromkeys(['GEOID', 'REP', 'DEM', 'LIB', 'OTH', 'area', 'gap', 'precincts'], 0)
+            bgresults['GEOID'] = b.GEOID
+            bgresults['REP'] = 0
+            bgresults['DEM'] = 0
+            bgresults['LIB'] = 0
+            bgresults['OTH'] = 0
+            intersections = blockgroups.loc[blockgroups.index == i].overlay( \
+                precincts, how='intersection', keep_geom_type=False)
+            if intersections.shape[0] > 0:
+                bgwith += 1
+                for j, p in intersections.iterrows():
+                    # what is the proportion area of overlay
+                    prproportion = intersections.area[j] / (precincts.loc[precincts.index == p.prindex].area)[p.prindex]
+                    # allocate this precincts voting to the block group using that proportion
+                    bgresults['REP'] += prproportion * precincts['REP'].loc[p.prindex]
+                    bgresults['DEM'] += prproportion * precincts['DEM'].loc[p.prindex]
+                    bgresults['LIB'] += prproportion * precincts['LIB'].loc[p.prindex]
+                    bgresults['OTH'] += prproportion * precincts['OTH'].loc[p.prindex]
+                    # decrement the precinct allocation tracking data
+                    prlist[p.prindex] -= prproportion * 100
+            else:
+                bgwithout += 1
+            bgresults['area'] = blockgroups.loc[blockgroups.index == i].area.sum()
+            bgresults['gap'] = blockgroups.loc[blockgroups.index == i].area.sum() - intersections.area.sum()
+            bgresults['precincts'] = intersections.shape[0]
+            # area of intersections should equal area of block group
+            bgaccumulate.append(bgresults)
+            # write the state result to csv
+        pd.DataFrame(bgaccumulate).to_csv(datapath + state[1]["Abbreviation"] + 'bg.csv')
+        pd.DataFrame.from_dict(prlist, orient='index').to_csv(datapath + state[1]["Abbreviation"] + 'pr.csv')
+
+
+def postprocessing():
+    """
+    Collect the state based datasets into an appended whole
+    Ensure the GEOID is string type with left pad zeroes
+    - SKIP - Add dummy block groups for missing states: SD, WV, KY
+    Add a state abbreviation column
+    :return:
+    """
+
+    import pandas as pd
+
+    datapath = "D:/Open Environments/data/"
+
+    # All states except for the missing 3
+    states = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','TN','TX','UT','VT','VA','WA','WI','WY']
+
+    # Initialize the full set to be appended using
+    s = states[0]
+    statefile = pd.read_csv(datapath + s + "bg.csv")
+    statefile["BLOCKGROUP_GEOID"] = statefile.GEOID.apply('{:0>12}'.format)
+    statefile["STATE"] = s
+    statefile = statefile.drop(columns=['GEOID', 'Unnamed: 0'])
+    all = statefile
+
+    for s in states[1:]:
+        statefile = pd.read_csv(datapath + s + "bg.csv")
+        statefile["BLOCKGROUP_GEOID"] = statefile.GEOID.apply('{:0>12}'.format)
+        statefile["STATE"] = s
+        statefile = statefile.drop(columns=['GEOID','Unnamed: 0'])
+        all = all.append(statefile)
