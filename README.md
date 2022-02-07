@@ -78,7 +78,7 @@ MIT's Election Data and Science Lab MEDSL (https://dataverse.harvard.edu/dataver
 ## License
 This code is available subject to the [MIT Open Source License](https://choosealicense.com/licenses/mit/)
 
-##Summary Statistics
+## Summary Statistics
 
 |State|Republican|Democrat|Libertarian|Other|Precincts|Block Groups|
 |-----|---------:|-------:|----------:|----:|--------:|-----------:|
