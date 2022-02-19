@@ -25,7 +25,7 @@ def get_blockgroups():
                  '37','38','39','40','41','42','44','45','46','47','48', \
                  '49','50','51','53','54','55','56','60','66','69','72','78']
 
-    datapath = "D:/Open Environments/data/census/tiger/getdata/"
+    datapath = "D:/Open Environments/data/census/tiger/2019 blockgroups/"
 
     for s in statefips:
         fn = 'tl_2021_' + s + '_bg.zip'

@@ -306,8 +306,7 @@ def postprocessing():
     statefile = pd.read_csv(datapath + s + "bg.csv")
     statefile["BLOCKGROUP_GEOID"] = statefile.GEOID.apply('{:0>12}'.format)
     statefile["STATE"] = s
-    statefile = statefile.drop(columns=['GEOID', 'Unnamed: 0'])
-    all = statefile
+    all = statefile.drop(columns=['GEOID', 'Unnamed: 0'])
 
     for s in states[1:]:
         statefile = pd.read_csv(datapath + s + "bg.csv")
