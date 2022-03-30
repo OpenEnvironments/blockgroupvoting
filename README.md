@@ -37,9 +37,9 @@ The dataset's columns include:
 |    |DEM|Votes for Democratic party candidate for president|
 |    |LIB|Votes for Libertarian party candidate for president|
 |    |OTH|Votes for presidential candidates other than Republican, Democratic or Libertarian|
-|    |area|square kilometers of area associated with this block group |
-|    |gap|total area of the block group, net of area attributed to voting precincts|
-|    |precincts|Number of voting precincts that intersect this block group|
+|    |AREA|square kilometers of area associated with this block group |
+|    |GAP|total area of the block group, net of area attributed to voting precincts|
+|    |PRECINCTS|Number of voting precincts that intersect this block group|
 
 ## Assumptions, Notes and Concerns:
 * Votes are attributed based upon the proportion of the precinct's area that intersects the corresponding block group. Alternative methods are left to the analyst's initiative. 
